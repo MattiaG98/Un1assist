@@ -9,11 +9,15 @@ const { application } = require("express");
 dotenv.config();
 
 mongoose
-    .connect(process.env.MONGO_URL)
+    .connect("mongodb+srv://un1assist:Un1assistITA9897@uniassist.4nhzy.mongodb.net/UniAssist?retryWrites=true&w=majority")
     .then(() => console.log("DBConnection Successfull!"))
     .catch((err) => {
         console.log(err);
     });
+
+app.get("/api/test", ()=> {
+    console.log("test is successfull");
+});
 
 app.use("/api/users", userRoutes);
 
