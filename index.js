@@ -9,7 +9,7 @@ const { application } = require("express");
 dotenv.config();
 
 mongoose
-    .connect(process.env.MONGO_URL)
+    .connect("mongodb+srv://UniAssistAdmin:Un1Assist@uniassistdb.wzesf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
     .then(() => console.log("DBConnection Successfull!"))
     .catch((err) => {
         console.log(err);
