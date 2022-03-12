@@ -29,7 +29,7 @@ const verifyTokenAndAdmin = (req, res, next) => {
     if (req.user.isAdmin) {
       next();
     } else {
-      res.status(403).json(req.user.isAdmin);
+      res.status(403).json(req.user);
     }
   });
 };
