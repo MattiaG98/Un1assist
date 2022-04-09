@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import logo from '../img/logo_ext.png';
+import loginLogo from '../img/loginfont.png';
 
 const Navbar = ({ user }) => {
   const logout = () => {
@@ -8,7 +10,7 @@ const Navbar = ({ user }) => {
     <div className="navbar">
       <span className="logo">
         <Link className="link" to="/">
-          Lama App
+          <img src={logo} width="100dp" height="50dp"></img>
         </Link>
       </span>
       {user ? (
@@ -27,7 +29,7 @@ const Navbar = ({ user }) => {
         </ul>
       ) : (
         <Link className="link" to="login">
-          Login
+          <img src={loginLogo} width="100dp" height="50dp"></img>
         </Link>
       )}
     </div>

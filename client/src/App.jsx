@@ -5,6 +5,7 @@ import Post from "./pages/Post";
 import Login from "./pages/Login";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { StripeProvider } from 'stripe';
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -36,6 +37,12 @@ const App = () => {
 
   return (
     <BrowserRouter>
+      {/* <StripeProvider
+        publishableKey="pk_test_51Kcw4wEaqE0gID0CFsc7J16ADrHO8qHFw1yu3u4dBYKkzOADF6Jb6JLVkf1L4vs5PYKch5Oe7BuMd5SpuAuJPgNo00qHob3M43"
+        urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+        merchantIdentifier="merchant.com.{{Un1Assist}}" // required for Apple Pay
+      >
+      </StripeProvider> */}
       <div>
         <Navbar user={user} />
         <Routes>
