@@ -1,10 +1,20 @@
 .navbar {
+<<<<<<< Updated upstream
   height: 50px;
   background-color: rgba(102, 16, 83, 0.698);
+=======
+  height: 70px;
+  background-color: rgba(206, 202, 138, 0.698);
+>>>>>>> Stashed changes
   color: white;
   display: flex;
   align-items: center;
   justify-content: space-around;
+}
+
+.navbarBlueBar {
+  height: 2pt;
+  background-color:#2a2a57;
 }
 
 .logo {
@@ -31,11 +41,55 @@
   object-fit: cover;
 }
 
+.entirePage {
+  height: 1000px;
+  width: 100%;
+}
+
 .home {
+  height: 100%;
   display: flex;
-  padding: 50px 100px;
+  background-image: url('https://scontent-mxp2-1.xx.fbcdn.net/v/t1.6435-9/78739892_10158091290547018_2017627579548172288_n.jpg?_nc_cat=110&ccb=1-5&_nc_sid=730e14&_nc_ohc=p5Zv73G-nZQAX_27geX&_nc_ht=scontent-mxp2-1.xx&oh=00_AT8hYpwc_O_Ds4LERcjRoYtNROZdnIxdKJob_SpUwhy9kA&oe=6275190D');
   justify-content: space-between;
   flex-wrap: wrap;
+}
+
+.central-section {
+  height: 100%;
+  width: 100%;
+}
+
+.central-top-section {
+  height: 100%;
+  width: 100%;
+}
+
+.homepage_searchbar_container {
+  padding-top: 50pt;
+  margin: auto;
+  width: 40%;
+}
+
+.homepage_searchbar {
+  width:100%;
+  height:48px;
+  margin: auto;
+  appearance:none;
+  border:0;
+  padding: .375rem .75rem;
+  outline:none;
+  border-radius:4px
+}
+
+.bookmarks_container {
+  width:100%;
+  height:170pt;
+  text-align: right;
+}
+
+.bookmark {
+  height:50pt;
+  width:170pt;
 }
 
 .card {
@@ -104,6 +158,186 @@
   align-items: center;
   justify-content: center;
 }
+
+.hamburger-menu {
+  min-height: 32px;
+  min-width: 60px;
+  position: relative;
+}
+
+.hamburger-menu:hover {
+  cursor: pointer;
+}
+
+.hamburger-menu span {
+  width: 100%;
+  height: 8px;
+  background-color: #2a2a57;
+  display: block;
+  border-radius: 3px;
+  position: absolute;
+  box-shadow: 0px 1px 10px 0px rgba(0, 0, 0, 0.4);
+}
+
+.hamburger-menu span:nth-of-type(1) {
+  top: 0;
+  z-index: 50;
+  animation: bar-1-reverse 
+             0.6s 
+             cubic-bezier(0.67, 0.01, 1, 0.72) 
+             forwards;
+}
+
+.hamburger-menu span:nth-of-type(2) {
+  top: calc(50% - 4px);
+  z-index: 0;
+  animation: bar-2-reverse 
+             0.6s ease-in-out 
+             forwards;
+}
+
+.hamburger-menu span:nth-of-type(3) {
+  bottom: 0%;
+  z-index: 100;
+  animation: bar-3-reverse 
+             0.6s 
+             cubic-bezier(0.67, 0.01, 1, 0.72) 
+             forwards;
+}
+
+.hamburger-menu.active span:nth-of-type(1) {
+  animation: bar-1 
+             0.6s 
+             cubic-bezier(0.34, 0.54, 0.57, 1) 
+             forwards;
+}
+
+.hamburger-menu.active span:nth-of-type(2) {
+  animation: bar-2 
+             0.6s 
+             ease-in-out forwards;
+}
+
+.hamburger-menu.active span:nth-of-type(3) {
+  animation: bar-3 
+             0.6s 
+             cubic-bezier(0.34, 0.54, 0.57, 1) 
+             forwards;
+}
+
+/* ANIMAZIONI */
+@keyframes load {
+  0% {
+      filter: opacity(0);
+      background-color: white;
+  }  
+  50% {
+      filter: opacity(0);
+      background-color: white;
+  } 
+  100% {
+      filter: opacity(1);
+      background-color: #ffffff;
+  }
+}
+
+/*ANIMAZIONI HAMBURGER_MENU*/
+@keyframes bar-1 {
+  0% {
+      transform: rotate(0deg);
+      top: 0;
+  }
+  50% {
+      transform: rotate(0deg);
+      top: calc(50% - 4px);
+  }
+  100% {
+      transform: rotate(45deg);
+      top: calc(50% - 4px);
+  }
+}
+
+@keyframes bar-2 {
+  0% {
+      transform: scale(1);
+      filter: opacity(1);
+  }
+  50% {
+      transform: scale(0);
+      filter: opacity(0);
+  }
+  100% {
+      transform: scale(0);
+      filter: opacity(0);
+  }
+}
+
+@keyframes bar-3 {
+  0% {
+      transform: rotate(0deg);
+      bottom: 0;
+  }
+  50% {
+      transform: rotate(0deg);
+      bottom: calc(50% - 4px);
+  }
+  100% {
+      transform: rotate(135deg);
+      bottom: calc(50% - 4px);
+  }
+}
+
+
+/* ANIMAZIONI HAMBURGER_MENU - REVERSE */
+@keyframes bar-1-reverse {
+  0% {
+      transform: rotate(45deg);
+      top: calc(50% - 4px);
+  }
+  50% {
+      transform: rotate(0deg);
+      top: calc(50% - 4px);
+  }
+  100% {
+      transform: rotate(0deg);
+      top: 0;
+  }
+}
+
+@keyframes bar-2-reverse {
+  0% {
+      transform: scale(0);
+      filter: opacity(0);
+  }
+  50% {
+      transform: scale(0);
+      filter: opacity(0);
+  }
+  100% {
+      transform: scale(1);
+      filter: opacity(1);
+  }
+}
+
+@keyframes bar-3-reverse {
+  0% {
+      transform: rotate(135deg);
+      bottom: calc(50% - 4px);
+  }
+  50% {
+      transform: rotate(0deg);
+      bottom: calc(50% - 4px);
+  }
+  100% {
+      transform: rotate(0deg);
+      bottom: 0;
+  }
+}
+
+/*ANIMATION MENU OPENING*/
+
+
+
 
 .wrapper {
   width: 60%;

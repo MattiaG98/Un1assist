@@ -4,15 +4,15 @@ import Github from "../img/github.png";
 
 const Login = () => {
   const google = () => {
-    window.open("http://localhost:5000/auth/google", "_self");
+    window.open("http://localhost:5001/auth/google", "_self");
   };
 
   const github = () => {
-    window.open("http://localhost:5000/auth/github", "_self");
+    window.open("http://localhost:5001/auth/github", "_self");
   };
 
   const facebook = () => {
-    window.open("http://localhost:5000/auth/facebook", "_self");
+    window.open("http://localhost:5001/auth/facebook", "_self");
   };
 
   return (
