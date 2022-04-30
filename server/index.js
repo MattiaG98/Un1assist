@@ -3,15 +3,17 @@ const indexRouter = require('./routes/index')
 const authorRouter = require('./routes/authors')
 const documentRouter = require('./routes/documents')
 const userRoutes = require("./routes/user");
-const authRoutes = require("./routes/auth");
+const authRouter = require("./routes/auth");
 const productRoutes = require("./routes/product");
 const cartRoutes = require("./routes/cart");
 const orderRoutes = require("./routes/order");
 
+const passportSetup = require("./passport");
+const passport = require("passport");
+
 const cookieSession = require("cookie-session");
 const cors = require("cors");
 const Router = require("express");
-
 
 const Grid = require("gridfs-stream");
 const multer = require("multer");
@@ -44,12 +46,25 @@ mongoose.connection.on("connected", () => {
   console.log(bucket);
 });
 
-app.use(cors());
+app.use(
+  cookieSession({ name: "session", keys: ["lama"], maxAge: 24 * 60 * 60 * 100 })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(express.json());
 app.use(express.urlencoded({
   extended: false
 }));
-app.use("/api/auth", authRoutes);
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    methods: "GET,POST,PUT,DELETE",
+    credentials: true,
+  })
+);
+app.use("/api/auth", authRouter);
 app.use("/api/index", indexRouter);
 app.use("/api/author", authorRouter);
 app.use("/api/documents", documentRouter);

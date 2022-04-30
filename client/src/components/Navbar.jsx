@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import logo from "../img/logo_ext.png";
 
 const Navbar = ({ user }) => {
   const logout = () => {
@@ -15,34 +16,6 @@ const Navbar = ({ user }) => {
   }
 
   return (
-<<<<<<< Updated upstream
-    <div className="navbar">
-      <span className="logo">
-        <Link className="link" to="/">
-          Lama App
-        </Link>
-      </span>
-      {user ? (
-        <ul className="list">
-          <li className="listItem">
-            <img
-              src={user.photos[0].value}
-              alt=""
-              className="avatar"
-            />
-          </li>
-          <li className="listItem">{user.displayName}</li>
-          <li className="listItem" onClick={logout}>
-            Logout
-          </li>
-        </ul>
-      ) : (
-        <Link className="link" to="login">
-          Login
-        </Link>
-      )}
-    </div>
-=======
     <>
       <div className="navbar">
         <span className="hamburger_menu">
@@ -72,14 +45,13 @@ const Navbar = ({ user }) => {
             </li>
           </ul>
         ) : (
-          <Link className="link" to="login">
+          <Link className="link" to="login" >
             Login
           </Link>
         )}
       </div>
       <div className="navbarBlueBar"></div>
     </>
->>>>>>> Stashed changes
   );
 };
 

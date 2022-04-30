@@ -1,11 +1,6 @@
 .navbar {
-<<<<<<< Updated upstream
-  height: 50px;
-  background-color: rgba(102, 16, 83, 0.698);
-=======
   height: 70px;
   background-color: rgba(206, 202, 138, 0.698);
->>>>>>> Stashed changes
   color: white;
   display: flex;
   align-items: center;
