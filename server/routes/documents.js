@@ -10,7 +10,7 @@ const multer = require('multer')
 require("dotenv")
   .config();
 
-const mongoURI = "mongodb+srv://UniAssistAdmin:Un1Assist@uniassistdb.wzesf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+const mongoURI = "mongodb+srv://UniAssistAdmin:Un1Assist@uniassistdb.wzesf.mongodb.net/Un1Assist?retryWrites=true&w=majority"
 
 const storage = new GridFsStorage({
   url: mongoURI,

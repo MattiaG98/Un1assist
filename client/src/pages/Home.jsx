@@ -1,6 +1,13 @@
-import Card from "../components/Card"
+import React from 'react';
+
 import {posts} from "../data"
 import { Link } from "react-router-dom";
+
+import Card from "../components/Card"
+import Footer from '../components/Footer'
+import Products from "../components/Products";
+import Slider from "../components/Slider";
+
 
 const Home = () => {
     return (
@@ -19,7 +26,9 @@ const Home = () => {
                         </Link>
                         <br></br>
                         <br></br>
-                        <button className="bookmark">GEOGRAFIA</button>
+                        <Link className="bookmark" to="SignUp">
+                            <button className="bookmark">REGISTRAZIONE</button>
+                        </Link>
                         <br></br>
                         <br></br>
                         <button className="bookmark">AUTOMAZIONE</button>
@@ -27,10 +36,13 @@ const Home = () => {
                         <br></br>
                         <button className="bookmark">CAZZEGGIO</button>
                     </div>
+                    <Slider />
                 </div>
+                <Products/>
+                <Footer/>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default Home
+export default Home;

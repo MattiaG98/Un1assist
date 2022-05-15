@@ -12,10 +12,8 @@ class DocumentsUploader extends Component {
 	
 	// On file select (from the pop up)
 	onFileChange = event => {
-	
-	// Update the state
-	this.setState({ selectedFile: event.target.files[0] });
-	
+		// Update the state
+		this.setState({ selectedFile: event.target.files[0] });
 	};
 	
 	// On file upload (click the upload button)

@@ -7,6 +7,13 @@
   justify-content: space-around;
 }
 
+.alert{
+  left: '0';
+  position: 'relative';
+  top: 0;
+  width: '100%';
+}
+
 .navbarBlueBar {
   height: 2pt;
   background-color:#2a2a57;
@@ -37,14 +44,14 @@
 }
 
 .entirePage {
-  height: 1000px;
+  height: 1100px;
   width: 100%;
 }
 
 .home {
   height: 100%;
   display: flex;
-  background-image: url('https://scontent-mxp2-1.xx.fbcdn.net/v/t1.6435-9/78739892_10158091290547018_2017627579548172288_n.jpg?_nc_cat=110&ccb=1-5&_nc_sid=730e14&_nc_ohc=p5Zv73G-nZQAX_27geX&_nc_ht=scontent-mxp2-1.xx&oh=00_AT8hYpwc_O_Ds4LERcjRoYtNROZdnIxdKJob_SpUwhy9kA&oe=6275190D');
+  background-image: url('./img/universitaPhoto.jpeg');
   justify-content: space-between;
   flex-wrap: wrap;
 }
@@ -60,6 +67,9 @@
 }
 
 .homepage_searchbar_container {
+  position: relative;
+  padding: 5px;
+  top: 0px;
   padding-top: 50pt;
   margin: auto;
   width: 40%;
@@ -220,6 +230,7 @@
              forwards;
 }
 
+
 /* ANIMAZIONI */
 @keyframes load {
   0% {
@@ -331,9 +342,6 @@
 
 /*ANIMATION MENU OPENING*/
 
-
-
-
 .wrapper {
   width: 60%;
   height: 75%;
@@ -430,7 +438,7 @@ input{
 .loginTitle{
   position: absolute;
   top: 150px;
-  color:lightgray
+  color:#2a2a57;
 }
 
 .link{
@@ -438,7 +446,7 @@ input{
   text-decoration: none;
 }
 
-@media screen and (max-width: 992px) {
+@media screen /*and (max-width: 992px)*/ {
   .card {
     width: 100%;
     margin-bottom: 50px;
@@ -471,4 +479,89 @@ input{
     height: 0.5px;
     width: 300px;
   }
+  .footer {
+    background-color: rgba(206, 202, 138, 0.698);
+    position: fixed; 
+    bottom: 0;
+    width: 100%;
+  
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  .footer-social-media {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .footer-social-media__icon {
+    margin: 0px 4px;
+    width: 25px;
+    height: 25px;
+  }
+  
+  .footer-info  {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .footer-info-left, .footer-info-center, .footer-info-right {
+    font-size: x-small;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+    width: 30%;
+  }
+  
+  .footer-info__name, .footer-info__email, .footer-info__number {
+    margin-bottom: 10px;
+  }
+  
+  .footer-info__name, .footer-info__returns {
+    text-align: start;
+  }
+  
+  .footer-info__email, .footer-info__terms {
+    text-align: center;
+  }
+  
+  .footer-info__number, .footer-info__contact {
+    text-align: end;
+  }
+  
+  .footer-date {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .footer-seperator {
+    flex-grow: 1;
+    border: none;
+    height: 1px;
+    background-color: black;
+    width: 100%;
+  }
+  
+  .footer-name {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .footer-bottom__name {
+    text-transform: uppercase;
+    font-family: RobotoBold;
+    font-size: large;
+    margin: 0px 20px;
+  }
+
+  .card-name {
+    width: 8%;
+    margin: 0 7px;
+  }
+
 }

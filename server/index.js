@@ -1,16 +1,22 @@
 const express = require("express")
-const indexRouter = require('./routes/index')
+const expressSession  = require("express-session");
+
 const authorRouter = require('./routes/authors')
 const documentRouter = require('./routes/documents')
-const userRoutes = require("./routes/user");
+const userRouter = require("./routes/user");
 const authRouter = require("./routes/auth");
-const productRoutes = require("./routes/product");
-const cartRoutes = require("./routes/cart");
-const orderRoutes = require("./routes/order");
+const productRouter = require("./routes/product");
+const cartRouter = require("./routes/cart");
+const orderRouter = require("./routes/order");
 
+const User = require('./models/User.js');
 const passportSetup = require("./passport");
 const passport = require("passport");
+const bcrypt = require("bcrypt");
+const LocalStrategy = require("passport-local").Strategy;
 
+const bodyParser = require("body-parser")
+const cookieParser = require('cookie-parser');
 const cookieSession = require("cookie-session");
 const cors = require("cors");
 const Router = require("express");
@@ -18,196 +24,114 @@ const Router = require("express");
 const Grid = require("gridfs-stream");
 const multer = require("multer");
 const mongoose = require("mongoose");
+const MongoStore = require('connect-mongo');
 const crypto = require("crypto");
 var path = require('path');
 
+const flash = require("connect-flash");
+
 const app = Router();
-const PORT = 5001;
 
-const mongoURI = "mongodb+srv://UniAssistAdmin:Un1Assist@uniassistdb.wzesf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+const mongoURI = "mongodb+srv://UniAssistAdmin:Un1Assist@uniassistdb.wzesf.mongodb.net/Un1Assist?retryWrites=true&w=majority"
 
-mongoose
-    .connect(mongoURI,{
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-        }).then(() => console.log("DBConnection Successfull!"))
-    .catch((err) => {
-        console.log(err);
-    });
+require("./utils/connectdb")
+require("./utils/createBucket")
+require("./strategies/JwtStrategy")
+require("./strategies/LocalStrategy")
+require("./authenticate")
 
-//CREAZIONE BUCKET
-let bucket;
-mongoose.connection.on("connected", () => {
-  var client = mongoose.connections[0].client;
-  var db = mongoose.connections[0].db;
-  bucket = new mongoose.mongo.GridFSBucket(db, {
-    bucketName: "newBucket"
-  });
-  console.log(bucket);
+app.use(bodyParser.json())
+app.use(cookieParser(process.env.COOKIE_SECRET))
+
+//Add the client URL to the CORS policy
+
+const whitelist = process.env.WHITELISTED_DOMAINS
+  ? process.env.WHITELISTED_DOMAINS.split(",")
+  : []
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error("Not allowed by CORS"))
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
+app.use(passport.initialize())
+
+app.get("/", function (req, res) {
+  res.send({ status: "success" })
 });
 
+app.use(flash());
 app.use(
-  cookieSession({ name: "session", keys: ["lama"], maxAge: 24 * 60 * 60 * 100 })
+  cookieSession({ name: "session", keys: ["lama"], maxAge: 24 * 60 * 60 * 100 }) //maxAGE (OF THE SESSION --> 1day)
 );
-
+app.use(expressSession({
+  secret: "our-passport-local-strategy-app",
+  store: MongoStore.create({
+    mongoUrl: mongoURI
+  }),
+  resave: true,
+  saveUninitialized: true,
+}));
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(express.json());
 app.use(express.urlencoded({
   extended: false
 }));
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    methods: "GET,POST,PUT,DELETE",
-    credentials: true,
-  })
-);
+
 app.use("/api/auth", authRouter);
-app.use("/api/index", indexRouter);
 app.use("/api/author", authorRouter);
 app.use("/api/documents", documentRouter);
-app.use("/api/user", userRoutes);
-app.use("/api/product", productRoutes);
-app.use("/api/cart", cartRoutes);
-app.use("/api/order", orderRoutes);
+app.use("/api/user", userRouter);
+app.use("/api/product", productRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/order", orderRouter);
 
-app.listen(5001, () => {
-  console.log("Backend server is runnning...");
+passport.serializeUser((user, cb) => {
+  cb(null, user._id);
+});
+passport.deserializeUser((id, cb) => {
+  User.findById(id)
+    .then(user => cb(null, user))
+    .catch(err => cb(err))
+  ;
 });
 
+/* passport.use(new LocalStrategy(
+  {passReqToCallback: true},
+  (...args) => {
+    const [req,,, done] = args;
 
-//------------IMPORTS------------------------
+    const {username, password} = req.body;
 
-/*
-const Router = require("express");
-const { GridFsStorage } = require("multer-gridfs-storage");
-const Grid = require("gridfs-stream");
-const multer = require("multer");
-const mongoose = require("mongoose");
-const crypto = require("crypto");
-var path = require('path');
-
-const cookieSession = require("cookie-session");
-const cors = require("cors");
-const passport = require("passport");
-require("./models/document");
-
-const dotenv = require("dotenv");
-const bodyParser = require('body-parser');
-
-const indexRouter = require('./routes/index')
-const authorRouter = require('./routes/authors')
-const documentRouter = require('./routes/documents')
-const userRoutes = require("./routes/user");
-const authRoutes = require("./routes/auth");
-const productRoutes = require("./routes/product");
-const cartRoutes = require("./routes/cart");
-const orderRoutes = require("./routes/order");
-
-
-//--------------------------------------------
-
-const app = Router();
-const PORT = 5001;
-
-dotenv.config();
-
-const mongoURI = "mongodb+srv://UniAssistAdmin:Un1Assist@uniassistdb.wzesf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
-
-mongoose
-    .connect(mongoURI,{
-        useUnifiedTopology: true,
-        useNewUrlParser: true,
-        }).then(() => console.log("DBConnection Successfull!"))
-    .catch((err) => {
-        console.log(err);
-    });
-
-//FOLDER STORAGE DOCUMENT
-
-var storage = multer.diskStorage(
-    {
-        destination: './public/DocumentsFolder',
-        filename: function (req, file, cb ) {
-            cb( null, file.originalname);
+    User.findOne({username})
+      .then(user => {
+        if (!user) {
+          return done(null, false, { message: "Incorrect username" });
         }
-    }
-);
+          
+        if (!bcrypt.compareSync(password, user.password)) {
+          return done(null, false, { message: "Incorrect password" });
+        }
+    
+        done(null, user);
+      })
+      .catch(err => done(err))
+    ;
+  }
+)); */
 
-const upload = multer({ storage: storage } )
+//START SEREVR IN PORT $port/8081
 
-// serving front end build files
-app.use(express.static(__dirname + "/public/DocumentsFolder"));
-
-
-//--------------------------------------------------
-
-//DOCUMENT UPLOAD ON MONGO
-
-//creating bucket when enstablished the connection with MongoDB Atlas
-let gfs;
-mongoose.connection.on("connected", () => {
-  var db = mongoose.connections[0].db;
-  bucket = new mongoose.mongo.GridFSBucket(db, {
-    bucketName: "newBucket"
-  });
-  console.log(bucket);
+const server = app.listen(process.env.PORT || 8081, () => {
+  const port = server.address().port
+  console.log("Server started at port: " + port);
 });
-
-//to parse json content
-app.use(express.json());
-
-//to parse body from url
-app.use(express.urlencoded({
-  extended: false
-}));
-
-const storage = new GridFsStorage({
-    url: mongoURI,
-    file: (req, file) => {
-      return new Promise((resolve, reject) => {
-        const filename = file.originalname;
-        const fileInfo = {
-          filename: filename,
-          bucketName: "newBucket"
-        };
-        resolve(fileInfo);
-      });
-    }
-  });
-
-
-// route for file upload
-app.post("/routes/documents/upload", upload.single('myFile'), (req, res, next) => {
-    console.log(req.file.originalname + " file successfully uploaded !!");
-    res.sendStatus(200);
-});
-
-//----------------------------------------
-
-const router = express.Router();
-app.use(cors());
-app.use('/upload', documentRouter);
-
-app.use(express.json());
-app.use(
-    cookieSession({ name: "session", keys: ["mattia"], maxAge: 24 * 60 * 60 * 100 })
-    );
-
-app.use("/auth", authRoute);
-
-app.get("/",(req,res)=>{
-    return res.send("<p>hello!</p>");
- });
-
- app.post('/upload', upload.single('file'), (req, res) => {
-    res.redirect('/');
-  });
-
-app.listen(5001, () => {
-    console.log("Backend server is runnning...");
-});
-
-*/

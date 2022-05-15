@@ -1,95 +1,108 @@
-const { veryfyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin } = require("./verifyToken");
-const User = require("../models/User");
-const router = require("express").Router();
+const express = require("express")
+const router = express.Router()
+const User = require("../models/User")
+const passport = require("passport")
+const jwt = require("jsonwebtoken")
 
-/*
-router.put("/:id", verifyToken, (req,res)=> {
-  if(req.user.id === req.params.id || req.user.isAdmin){
+const { getToken, COOKIE_OPTIONS, getRefreshToken } = require("../authenticate")
 
+router.post("/signup", (req, res, next) => {
+  User.register(
+    new User({ username: req.body.username }),
+    req.body.password,
+    (err, user) => {
+      if (err) {
+        res.statusCode = 500
+        res.send(err)
+      } else {
+        user.firstName = req.body.firstName
+        user.lastName = req.body.lastName || ""
+        const token = getToken({ _id: user._id })
+        const refreshToken = getRefreshToken({ _id: user._id })
+        user.refreshToken.push({ refreshToken })
+        user.save((err, user) => {
+          if (err) {
+            res.statusCode = 500
+            res.send(err)
+          } else {
+            res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS)
+            res.send({ success: true, token })
+          }
+        })
+      }
+    }
+  )
+})
+
+router.post("/login", passport.authenticate("local"), (req, res, next) => {
+  const token = getToken({ _id: req.user._id })
+  const refreshToken = getRefreshToken({ _id: req.user._id })
+  User.findById(req.user._id).then(
+    user => {
+      user.refreshToken.push({ refreshToken })
+      user.save((err, user) => {
+        if (err) {
+          res.statusCode = 500
+          res.send(err)
+        } else {
+          res.cookie("refreshToken", refreshToken, COOKIE_OPTIONS)
+          res.send({ success: true, token })
+        }
+      })
+    },
+    err => next(err)
+  )
+})
+
+router.post("/refreshToken", (req, res, next) => {
+  const { signedCookies = {} } = req
+  const { refreshToken } = signedCookies
+
+  if (refreshToken) {
+    try {
+      const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+      const userId = payload._id
+      User.findOne({ _id: userId }).then(
+        user => {
+          if (user) {
+            // Find the refresh token against the user record in database
+            const tokenIndex = user.refreshToken.findIndex(
+              item => item.refreshToken === refreshToken
+            )
+
+            if (tokenIndex === -1) {
+              res.statusCode = 401
+              res.send("Unauthorized")
+            } else {
+              const token = getToken({ _id: userId })
+              // If the refresh token exists, then create new one and replace it.
+              const newRefreshToken = getRefreshToken({ _id: userId })
+              user.refreshToken[tokenIndex] = { refreshToken: newRefreshToken }
+              user.save((err, user) => {
+                if (err) {
+                  res.statusCode = 500
+                  res.send(err)
+                } else {
+                  res.cookie("refreshToken", newRefreshToken, COOKIE_OPTIONS)
+                  res.send({ success: true, token })
+                }
+              })
+            }
+          } else {
+            res.statusCode = 401
+            res.send("Unauthorized")
+          }
+        },
+        err => next(err)
+      )
+    } catch (err) {
+      res.statusCode = 401
+      res.send("Unauthorized")
+    }
+  } else {
+    res.statusCode = 401
+    res.send("Unauthorized")
   }
 })
-*/
-
-//UPDATE
-router.put("/:id", verifyTokenAndAuthorization, async (req, res) => {
-  if (req.body.password) {
-    req.body.password = CryptoJS.AES.encrypt(
-      req.body.password,
-      process.env.PASS_SEC
-    ).toString();
-  }
-  try {
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        $set: req.body,
-      },
-      { new: true }
-    );
-    res.status(200).json(updatedUser);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-//DELETE
-router.delete("/:id", verifyTokenAndAuthorization, async (req, res) => {
-  try {
-    await User.findByIdAndDelete(req.params.id);
-    res.status(200).json("User has been deleted...");
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-//GET USER
-router.get("/find/:id", verifyTokenAndAdmin, async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    const { password, ...others } = user._doc;
-    res.status(200).json(others);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-//GET ALL USER
-router.get("/", verifyTokenAndAdmin, async (req, res) => {
-  const query = req.query.new;
-  try {
-    const users = query ? await User.find().sort({_id: -1}).limit(5) : await User.find();
-    res.status(200).json(users);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-//GET USER STATS
-
-router.get("/stats", verifyTokenAndAdmin, async (req, res) => {
-  const date = new Date();
-  const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
-
-  try{
-
-    const data = await User.aggregate([
-      { $match: { createdAt: { $gte: lastYear } } },
-      {
-        $project:{
-          month: { $month: "$createdAt" }, 
-        },
-      },
-      {
-        $group:{
-          _id: "$month",
-          total: { $sum: 1 }
-        }
-      }
-    ]);
-    res.status(200).json(data)
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
 
 module.exports = router
