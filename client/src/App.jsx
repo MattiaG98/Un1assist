@@ -12,6 +12,7 @@ import Success from "./pages/Success";
 import Cart from "./pages/Cart";
 import ProductList from "./pages/ProductList";
 import Product from "./pages/Product";
+import TableTestPage from "./pages/TableTestPage";
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -81,6 +82,10 @@ const App = () => {
           <Route 
             path="/Success"
             element={user ? <Navigate to="/Success"/> : <Success />}
+          />
+          <Route 
+            path="/TableTestPage"
+            element={user ? <Navigate to="/TableTestPage"/> : <TableTestPage />}
           />
         </Routes>
       </div>
