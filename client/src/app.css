@@ -481,14 +481,15 @@ input{
   }
   .footer {
     background-color: rgba(206, 202, 138, 0.698);
-    position: fixed; 
-    bottom: 0;
-    width: 100%;
+    /*position: absolute; */
   
     display: flex;
     flex-direction: column;
-    margin-bottom: 20px;
     font-weight: bold;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 200px;
   }
   
   .footer-social-media {
@@ -521,8 +522,8 @@ input{
     margin-bottom: 10px;
   }
   
-  .footer-info__name, .footer-info__returns {
-    text-align: start;
+  .footer-info__name, .footer-info__termsConditions {
+    text-align: left;
   }
   
   .footer-info__email, .footer-info__terms {
@@ -564,4 +565,9 @@ input{
     margin: 0 7px;
   }
 
+  .paypal_footer {
+    margin: 5px 5px;
+    width: 75px;
+    height: 35px;
+  }
 }
