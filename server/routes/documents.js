@@ -19,7 +19,7 @@ const storage = new GridFsStorage({
       const filename = file.originalname;
       const fileInfo = {
         filename: filename,
-        bucketName: "newBucket"
+        bucketName: "documents"
       };
       resolve(fileInfo);
     });
@@ -58,6 +58,24 @@ documentRouter.get('/getAllDocuments', async (req, res) => {
   } catch (error) {
     res.status(400).send('Error while getting list of documents. Try again later.');
   }
+});
+
+//Looks for a file with filename passed in request (and start download stream if it founds a result)
+documentRouter.get("/fileinfo/:filename", (req, res) => {
+  const file = bucket
+    .find({
+      filename: req.params.filename
+    })
+    .toArray((err, files) => {
+      if (!files || files.length === 0) {
+        return res.status(404)
+          .json({
+            err: "no files exist"
+          });
+      }
+      bucket.openDownloadStreamByName(req.params.filename)
+        .pipe(res);
+    });
 });
 
 documentRouter.get('/download/:id', async (req, res) => {
