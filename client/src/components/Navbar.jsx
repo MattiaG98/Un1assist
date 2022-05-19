@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 import logo from "../img/logo_ext.png";
 
-const Navbar = ({ user }) => {
-  const logout = () => {
-    window.open("http://localhost:5001/auth/logout", "_self");
-  };
+const Navbar = ({ userContext, onClickLogout }) => {
+
+  console.log("USERCONTEXT NAVBAR: " + JSON.stringify(userContext));
 
   let onClickHamburger = (element) => {
     if(element.currentTarget.classList.contains('active')){
@@ -30,17 +29,12 @@ const Navbar = ({ user }) => {
             <img src={logo} width="150dp" height="50dp"></img>
           </Link>
         </span>
-        {user ? (
+        {userContext.token ? (
           <ul className="list">
             <li className="listItem">
-              <img
-                src={user.photos[0].value}
-                alt=""
-                className="avatar"
-              />
             </li>
-            <li className="listItem">{user.displayName}</li>
-            <li className="listItem" onClick={logout}>
+            <li className="listItem">{userContext.details?.username || ""}</li>
+            <li className="listItem" onClick={onClickLogout}>
               Logout
             </li>
           </ul>

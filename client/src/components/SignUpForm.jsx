@@ -1,80 +1,125 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import Alert from '@mui/material/Alert';
 import { Navigate } from 'react-router-dom';
+import { UserContext } from "../context/UserContext"
  
 export default function Form() {
  
   // States for registration
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
   const [password, setPassword] = useState('');
  
   // States for checking the errors
-  const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setSubmitting] = useState(false);
   const [error, setError] = useState(false);
 
   // Redirect state
   const [redirect, setRedirect] = useState(null);
-
+  const [userContext, setUserContext] = useContext(UserContext)
   // Handling the name change
   const handleUsername = (e) => {
-    setUsername(e.target.value);
-    setSubmitted(false);
+    if (!containsSpecialChars(e.target.value)){
+      setUsername(e.target.value);
+      setSubmitting(false);
+    } else{
+      setTimeout(()=> alert("Special characters not allowed"), 200);
+    }
+    
   };
  
   // Handling the email change
   const handleEmail = (e) => {
     setEmail(e.target.value);
-    setSubmitted(false);
+    setSubmitting(false);
+  };
+
+  // Handling the email change
+  const handleFirstname = (e) => {
+    if (!containsSpecialChars(e.target.value)){
+      setFirstname(e.target.value);
+      setSubmitting(false);
+    } else{
+      setTimeout(()=> alert("Special characters not allowed"), 200);
+    }
+  };
+
+  // Handling the email change
+  const handleLastname = (e) => {
+    if (!containsSpecialChars(e.target.value)){
+      setLastname(e.target.value);
+      setSubmitting(false);
+    } else{
+      setTimeout(()=> alert("Special characters not allowed"), 200);
+    }
   };
  
   // Handling the password change
   const handlePassword = (e) => {
     setPassword(e.target.value);
-    setSubmitted(false);
+    setSubmitting(false);
   };
  
   // Handling the form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (username === '' || email === '' || password === '') {
-        setError(true);
-    } else {
-        let body = {
-          username: username,
-          email: email,
-          password: password
-        }
-        axios.post("http://localhost:5001/api/auth/signup", body, {
-            headers: {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
-                "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
-                "Content-Type": "application/json",
-            },
-        }).then((res)=>{
-          if (res.data === "OK") {
-            setError(false);
-            setSubmitted(true);
-          } else if (res.data === "ALREADYEXISTS") {
-            setError(true);
-          } else {
-            setError(true)
-          }
-        });
-        setSubmitted(true);
-        setError(false);
+    setSubmitting(true);
+    setError("");
+
+    const genericErrorMessage = "Something went wrong! Please try again later."
+
+    let body = {
+      username: username,
+      email: email,
+      firstname: firstname,
+      lastname: lastname,
+      password: password
     }
+    axios.post("http://localhost:5001/api/user/signup", body, {
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PATCH, PUT, DELETE, OPTIONS",
+            "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token",
+            "Content-Type": "application/json",
+        },
+    }).then(async response => {
+      setSubmitting(false)
+      if (!response.status === 200) {
+        if (response.status === 400) {
+          setError("Please fill all the fields correctly!")
+        } else if (response.status === 401) {
+          setError("Invalid email and password combination.")
+        } else if (response.status === 500) {
+          console.log(response)
+          const data = await response.json()
+          if (data.message) setError(data.message || genericErrorMessage)
+        } else {
+          setError(genericErrorMessage)
+        }
+      } else {
+        const data = await response.data;
+        setUserContext(oldValues => {
+          return { ...oldValues, token: data.token }
+        })
+        setRedirect(true);
+      }
+    })
+    .catch(error => {
+      setSubmitting(false)
+      setError(genericErrorMessage)
+    })
   };
  
-  // Showing success message
+ /*  // Showing success message
   const successMessage = () => {
     return (
       <div
         className="success"
         style={{
-          display: submitted ? '' : 'none',
+          display: submitting ? '' : 'none',
         }}>
         <h1>User {username} successfully registered!!</h1>
       </div>
@@ -92,39 +137,53 @@ export default function Form() {
         <Alert severity="error">Please check if username and password are correct and retry</Alert>
       </div>
     );
-  };
+  }; */
+
+  function containsSpecialChars(str) {
+    const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+    return specialChars.test(str);
+  }
  
   return (
     <div className="form">
       <div>
         <h1>User Registration</h1>
       </div>
+
  
       {/* Calling to the methods */}
-      <div className="messages">
+      {/* <div className="messages">
         {errorMessage()}
         {successMessage()}
-      </div>
+      </div> */}
 
       {
-        redirect ? <Navigate to={redirect}/> : <></>
+        redirect ? <Navigate to={"/"}/> : <></>
       }
  
       <form>
         {/* Labels and inputs for form data */}
         <label className="label">Username</label>
-        <input onChange={handleUsername} className="input"
+        <input onChange={handleUsername} id="username" placeholder="Username" className="input"
           value={username} type="text" />
  
         <label className="label">Email</label>
-        <input onChange={handleEmail} className="input"
+        <input onChange={handleEmail} id="email" placeholder="Email" className="input"
           value={email} type="email" />
+        
+        <label className="label">First Name</label>
+        <input onChange={handleFirstname} id="firstname" placeholder="First Name" className="input"
+          value={firstname} type="text" />
+        
+        <label className="label">Last Name</label>
+        <input onChange={handleLastname} id="lastname" placeholder="Last Name" className="input"
+          value={lastname} type="text" />
  
         <label className="label">Password</label>
-        <input onChange={handlePassword} className="input"
+        <input onChange={handlePassword} id="password" placeholder="Password" className="input"
           value={password} type="password" />
  
-        <button onClick={handleSubmit} className="btn" type="submit">
+        <button onClick={handleSubmit} disabled={isSubmitting} text={`${isSubmitting ? "Signing Up" : "Sign Up"}`} className="btn" type="submit">
           Submit
         </button>
       </form>

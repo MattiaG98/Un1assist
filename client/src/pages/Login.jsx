@@ -1,6 +1,7 @@
 import Google from "../img/google.png";
 import Facebook from "../img/facebook.png";
 import Github from "../img/github.png";
+import SignInForm from "../components/SignInForm.jsx";
 
 const Login = () => {
   const google = () => {
@@ -38,9 +39,7 @@ const Login = () => {
           <div className="or">OR</div>
         </div>
         <div className="right">
-          <input type="text" placeholder="Username" />
-          <input type="text" placeholder="Password" />
-          <button className="submit">Login</button>
+          <SignInForm/>
         </div>
       </div>
     </div>

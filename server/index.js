@@ -33,7 +33,7 @@ const flash = require("connect-flash");
 const app = Router();
 
 const mongoURI = "mongodb+srv://UniAssistAdmin:Un1Assist@uniassistdb.wzesf.mongodb.net/Un1Assist?retryWrites=true&w=majority"
-
+require("dotenv").config()
 require("./utils/connectdb")
 require("./utils/createBucket")
 require("./strategies/JwtStrategy")

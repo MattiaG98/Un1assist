@@ -50,10 +50,20 @@
 
 .home {
   height: 100%;
+  width: 100%;
   display: flex;
-  background-image: url('./img/universitaPhoto.jpeg');
   justify-content: space-between;
   flex-wrap: wrap;
+  z-index: 2;
+  position: absolute;
+}
+
+.background-blurred {
+  filter: blur(3px);
+  background-image: url('./img/universitaPhoto.jpeg');
+  background-size: cover;
+  width: 100%;
+  height: 100%;
 }
 
 .central-section {
@@ -95,6 +105,38 @@
 .bookmark {
   height:50pt;
   width:170pt;
+}
+
+.docUpload-page{
+  margin: auto;
+  background-image: url('./img/universitaPhoto.jpeg');
+  width: 100%;
+  height: 100%;
+}
+
+.docUpload-page .form-container{
+  position: relative;
+  margin: auto;
+  width: 50%;
+  border: 3px solid #2a2a57;
+  padding: 10px;
+  box-shadow: 3px 3px 3px 3px rgba(51, 51, 51, 0.263);
+  border-radius: 25px;
+}
+
+.docUpload-page .form-container .form-blurred_path{
+  filter: blur(5px);
+  background-color: red !important;
+  width: 100%;
+  height: 100%;
+}
+
+.docUpload-page .form-container .form-content{
+
+}
+
+.un1_button{
+
 }
 
 .card {

@@ -4,7 +4,7 @@ const User = require("../models/User")
 const passport = require("passport")
 const jwt = require("jsonwebtoken")
 
-const { getToken, COOKIE_OPTIONS, getRefreshToken } = require("../authenticate")
+const { getToken, COOKIE_OPTIONS, getRefreshToken, verifyUser } = require("../authenticate")
 
 router.post("/signup", (req, res, next) => {
   User.register(
@@ -15,8 +15,9 @@ router.post("/signup", (req, res, next) => {
         res.statusCode = 500
         res.send(err)
       } else {
-        user.firstName = req.body.firstName
-        user.lastName = req.body.lastName || ""
+        user.firstname = req.body.firstname
+        user.lastname = req.body.lastname || ""
+        user.email = req.body.email
         const token = getToken({ _id: user._id })
         const refreshToken = getRefreshToken({ _id: user._id })
         user.refreshToken.push({ refreshToken })
@@ -33,7 +34,7 @@ router.post("/signup", (req, res, next) => {
     }
   )
 })
-
+//by calling passport.authenticate we check if the credential are correct, and only if correct, the control pass to login route body
 router.post("/login", passport.authenticate("local"), (req, res, next) => {
   const token = getToken({ _id: req.user._id })
   const refreshToken = getRefreshToken({ _id: req.user._id })
@@ -54,13 +55,40 @@ router.post("/login", passport.authenticate("local"), (req, res, next) => {
   )
 })
 
+router.get("/logout", verifyUser, (req, res, next) => {
+  const { signedCookies = {} } = req
+  const { refreshToken } = signedCookies
+  User.findById(req.user._id).then(
+    user => {
+      const tokenIndex = user.refreshToken.findIndex(
+        item => item.refreshToken === refreshToken
+      )
+        //-1 is returned if .findIndex() finds nothing
+      if (tokenIndex !== -1) {
+        user.refreshToken.id(user.refreshToken[tokenIndex]._id).remove()
+      }
+
+      user.save((err, user) => {
+        if (err) {
+          res.statusCode = 500
+          res.send(err)
+        } else {
+          res.clearCookie("refreshToken", COOKIE_OPTIONS)
+          res.send({ success: true })
+        }
+      })
+    },
+    err => next(err)
+  )
+})
+
 router.post("/refreshToken", (req, res, next) => {
   const { signedCookies = {} } = req
   const { refreshToken } = signedCookies
 
   if (refreshToken) {
     try {
-      const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+      const payload = jwt.verify(refreshToken, REFRESH_TOKEN_SECRET)
       const userId = payload._id
       User.findOne({ _id: userId }).then(
         user => {
@@ -103,6 +131,11 @@ router.post("/refreshToken", (req, res, next) => {
     res.statusCode = 401
     res.send("Unauthorized")
   }
+})
+
+//to get logged user details (need to pass JWT received in login/signUp response)
+router.get("/me", verifyUser, (req, res, next) => {
+  res.send(req.user)
 })
 
 module.exports = router

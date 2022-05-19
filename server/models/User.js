@@ -28,11 +28,15 @@ const Session = new Schema({
 })
 
 const User = new Schema({
-  firstName: {
+  firstname: {
     type: String,
     default: "",
   },
-  lastName: {
+  lastname: {
+    type: String,
+    default: "",
+  },
+  username: {
     type: String,
     default: "",
   },
