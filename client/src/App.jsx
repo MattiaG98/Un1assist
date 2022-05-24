@@ -18,7 +18,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState, useCallback, useContext } from "react";
 
 const App = () => {
-  const [userContext, setUserContext] = useContext(UserContext)
+  const [userContext, setUserContext] = useContext(UserContext);
 
   const verifyUser = useCallback(() => {
     fetch("http://localhost:5001/api/user/refreshToken", {

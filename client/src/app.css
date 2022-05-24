@@ -43,27 +43,40 @@
   object-fit: cover;
 }
 
+.inputText{
+  border-radius: 6px;
+  height:auto;
+  width:auto;
+}
+
+.formSignIn{
+  margin-bottom: 50px;
+}
+
+.btnSignIn{
+  margin: auto;
+  color:#2a2a57;
+  border-radius:4px;
+}
+
 .entirePage {
   height: 1100px;
   width: 100%;
 }
 
-.home {
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  z-index: 2;
-  position: absolute;
+.linkSignIn{
+  color:#2a2a57;
+  cursor: pointer;
+  font-weight: bold;
+  margin-right: 20px;
 }
 
-.background-blurred {
-  filter: blur(3px);
-  background-image: url('./img/universitaPhoto.jpeg');
-  background-size: cover;
-  width: 100%;
+.home {
   height: 100%;
+  display: flex;
+  background-image: url('./img/universitaPhoto.jpeg');
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .central-section {
@@ -90,6 +103,7 @@
   height:48px;
   margin: auto;
   appearance:none;
+  background-color: #ffffffa6;
   border:0;
   padding: .375rem .75rem;
   outline:none;
@@ -103,6 +117,10 @@
 }
 
 .bookmark {
+  font-weight: bold;
+  color:#2a2a57;
+  border-radius: 6px 0px 0px 40px;
+  background-color:rgba(206, 202, 138, 0.836);
   height:50pt;
   width:170pt;
 }
@@ -207,6 +225,7 @@
 }
 
 .hamburger-menu {
+  margin-left: 20px;
   min-height: 32px;
   min-width: 60px;
   position: relative;
@@ -403,6 +422,18 @@
   align-items: center;
 }
 
+.textSignUpOver{
+  font-size:small;
+}
+
+.formSignUp{
+  margin-left: 20px;
+}
+
+.btnSignUp{
+  border-radius: 4px;
+}
+
 .center{
   height: 100%;
   display: flex;
@@ -511,6 +542,7 @@ input{
 
   .left {
     padding: 20px;
+    margin-top:30px;
   }
 
   .right {
