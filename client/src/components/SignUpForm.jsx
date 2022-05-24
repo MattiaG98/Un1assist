@@ -161,29 +161,49 @@ export default function Form() {
         redirect ? <Navigate to={"/"}/> : <></>
       }
  
-      <form>
+      <form className="formSignUp">
         {/* Labels and inputs for form data */}
         <label className="label">Username</label>
-        <input onChange={handleUsername} id="username" placeholder="Username" className="input"
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input onChange={handleUsername} id="username" placeholder="Username" className="inputText"
           value={username} type="text" />
- 
+        <br>
+        </br>
+        <br>
+        </br>
         <label className="label">Email</label>
-        <input onChange={handleEmail} id="email" placeholder="Email" className="input"
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input onChange={handleEmail} id="email" placeholder="Email" className="inputText"
           value={email} type="email" />
-        
+        <br>
+        </br>
+        <br>
+        </br>
         <label className="label">First Name</label>
-        <input onChange={handleFirstname} id="firstname" placeholder="First Name" className="input"
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input onChange={handleFirstname} id="firstname" placeholder="First Name" className="inputText"
           value={firstname} type="text" />
-        
+        <br>
+        </br>
+        <br>
+        </br>
         <label className="label">Last Name</label>
-        <input onChange={handleLastname} id="lastname" placeholder="Last Name" className="input"
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input onChange={handleLastname} id="lastname" placeholder="Last Name" className="inputText"
           value={lastname} type="text" />
- 
+ <br>
+        </br>
+        <br>
+        </br>
         <label className="label">Password</label>
-        <input onChange={handlePassword} id="password" placeholder="Password" className="input"
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input onChange={handlePassword} id="password" placeholder="Password" className="inputText"
           value={password} type="password" />
- 
-        <button onClick={handleSubmit} disabled={isSubmitting} text={`${isSubmitting ? "Signing Up" : "Sign Up"}`} className="btn" type="submit">
+ <br>
+        </br>
+        <br>
+        </br>
+        <button onClick={handleSubmit} disabled={isSubmitting} text={`${isSubmitting ? "Signing Up" : "Sign Up"}`} className="btnSignUp" type="submit">
           Submit
         </button>
       </form>
