@@ -39,8 +39,8 @@ const Navbar = ({ userContext, onClickLogout }) => {
             </li>
           </ul>
         ) : (
-          <Link className="link" to="login" >
-            Login
+          <Link to="login" >
+            <label className="linkSignIn">Login</label>
           </Link>
         )}
       </div>

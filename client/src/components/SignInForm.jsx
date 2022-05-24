@@ -3,6 +3,7 @@ import { useState, useContext } from 'react';
 import Alert from '@mui/material/Alert';
 import { Navigate } from 'react-router-dom';
 import { UserContext } from "../context/UserContext";
+import { Link } from "react-router-dom";
 
  
 export default function SignInForm() {
@@ -42,6 +43,7 @@ export default function SignInForm() {
         username: username,
         password: password
     }
+
     axios.post("http://localhost:5001/api/user/login", body, {
         headers: {
             "Access-Control-Allow-Origin": "*",
@@ -100,10 +102,7 @@ export default function SignInForm() {
   }; */
 
   return (
-    <div className="form">
-      <div>
-        <h1>User Login</h1>
-      </div>
+    <div className="formSignIn">
  
       {/* Calling to the methods */}
       {/* <div className="messages">
@@ -118,17 +117,30 @@ export default function SignInForm() {
       <form>
         {/* Labels and inputs for form data */}
  
-        <label className="label">Username</label>
-        <input onChange={handleUsername} id="username" placeholder="Username" className="input"
+        <input onChange={handleUsername} id="username" placeholder="Username" className="inputText"
           value={username} type="username" />
- 
-        <label className="label">Password</label>
-        <input onChange={handlePassword} id="password" placeholder="Password" className="input"
+        <br>
+        </br>
+        <br>
+        </br>
+        <input onChange={handlePassword} id="password" placeholder="Password" className="inputText"
           value={password} type="password" />
- 
-        <button onClick={handleSubmit} disabled={submitting} text={`${submitting ? "Signing In" : "Sign In"}`} className="btn" type="submit">
-          Submit
+        <br>
+        </br>
+        <br>
+        </br>
+        <button onClick={handleSubmit} disabled={submitting} text={`${submitting ? "Signing In" : "Sign In"}`} className="btnSignIn" type="submit">
+          <div className="btnSignIn">
+            Submit
+          </div>
         </button>
+        <br>
+        </br>
+        <Link className="linkSignUp" to="SignUp">
+          <label classname="textSignUpOver">
+            Are you not signed in? Sign Up Here
+          </label>
+        </Link>
       </form>
     </div>
   );
