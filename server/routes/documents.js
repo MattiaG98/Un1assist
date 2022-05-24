@@ -7,8 +7,11 @@ const Author = require('../models/author')
 const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']
 const multer = require('multer')
 
+
 require("dotenv")
   .config();
+
+let mongoBucketModule = require('../utils/createBucket');
 
 const mongoURI = "mongodb+srv://UniAssistAdmin:Un1Assist@uniassistdb.wzesf.mongodb.net/Un1Assist?retryWrites=true&w=majority"
 
@@ -48,7 +51,30 @@ documentRouter.post(
   }
 );
 
-documentRouter.get('/getAllDocuments', async (req, res) => {
+documentRouter.get('/getAllDocuments', async (req, res, next) => {
+  try{
+    mongoBucketModule.bucket.find().toArray().then((files)=>{
+      res.send(files);
+    })
+    /* mongoBucketModule.bucket.find().toArray().then((err, files) => {
+      if(!files || files.length === 0) {
+        return res.status(200).json({
+          success: false,
+          message: 'No files available'
+        });
+      } else{
+        res.status(200).json({
+          success: true,
+          files,
+        })
+      }
+    }) */
+  }catch(e){
+    res.status(500).send("Sono entrato nel catch" + e);
+  }
+});
+
+/* documentRouter.get('/getAllDocuments', async (req, res) => {
   try {
     const documents = await Document.find({});
     const sortedByCreationDate = documents.sort(
@@ -58,7 +84,7 @@ documentRouter.get('/getAllDocuments', async (req, res) => {
   } catch (error) {
     res.status(400).send('Error while getting list of documents. Try again later.');
   }
-});
+}); */
 
 //Looks for a file with filename passed in request (and start download stream if it founds a result)
 documentRouter.get("/fileinfo/:filename", (req, res) => {

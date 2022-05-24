@@ -25,7 +25,6 @@ const Grid = require("gridfs-stream");
 const multer = require("multer");
 const mongoose = require("mongoose");
 const MongoStore = require('connect-mongo');
-const crypto = require("crypto");
 var path = require('path');
 
 const flash = require("connect-flash");
